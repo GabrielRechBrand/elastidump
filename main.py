@@ -30,10 +30,28 @@ def main():
             print(Fore.RED + "❌ Please enter a valid number.")
 
     # Nome do arquivo
-    backup_file = input(Fore.CYAN + f"Type backup file name (default: backup_{index_name}.jsonl): ").strip()
+    backup_file = input(Fore.CYAN + f"Type backup file name (default: backup_{index_name}): ").strip()
     if not backup_file:
-        backup_file = f"backup_{index_name}.jsonl"
+        backup_file = f"backup_{index_name}"
     print(Fore.GREEN + f"📄 Backup file: {backup_file}")
+
+    # Escolher formato de exportação
+    print(Fore.CYAN + "\n💾 Choose export format: ")
+    print(Fore.YELLOW + "[1] JSONL (default)\n[2] JSON\n[3] CSV")
+    while True:
+        fmt_input = input(Fore.CYAN + "Type the number for format: ").strip()
+        if fmt_input == "" or fmt_input == "1":
+            file_format = "jsonl"
+            break
+        elif fmt_input == "2":
+            file_format = "json"
+            break
+        elif fmt_input == "3":
+            file_format = "csv"
+            break
+        else:
+            print(Fore.RED + "❌ Invalid option, try again.")
+    print(Fore.GREEN + f"📁 Export format: {file_format.upper()}")
 
     # Pegando os campos dinamicamente do mapping
     mapping = es.indices.get_mapping(index=index_name)
@@ -69,7 +87,14 @@ def main():
             print(Fore.RED + "❌ Invalid input. Type 't' for test or 'r' for real.")
 
     # Executa exportação
-    export_to_file(es, index_name, backup_file, fields_to_export, test_mode)
+    export_to_file(
+        es,
+        index_name,
+        backup_file,
+        fields_to_export,
+        file_format=file_format,
+        test_mode=test_mode
+    )
 
 if __name__ == "__main__":
     main()
