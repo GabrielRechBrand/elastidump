@@ -23,7 +23,7 @@ def fetch_documents(es, index_name, scroll_time, batch_size, test_mode=False, ma
     try:
         while res['hits']['hits']:
             for doc in res['hits']['hits']:
-                yield doc['_source']
+                yield doc.get('_source', {}), doc.get('_id')
                 processed += 1
 
                 print(Fore.GREEN + f"\r📄 Exported {processed}/{total_docs} documents...", end='')

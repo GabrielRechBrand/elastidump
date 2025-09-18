@@ -77,6 +77,17 @@ def main():
         except ValueError:
             print(Fore.RED + "❌ Enter only numbers separated by commas.")
 
+    while True:
+        include_id_answer = input(Fore.CYAN + "\n🔑 Do you want to include the 'id' field (Elasticsearch _id) in the export? [y/N]: ").strip().lower()
+        if include_id_answer in ["", "n", "no", "nao", "não"]:
+            include_id = False
+            break
+        elif include_id_answer in ["y", "yes", "s", "sim"]:
+            include_id = True
+            break
+        else:
+            print(Fore.RED + "❌ Invalid option. Reply with 'y' for yes or 'n' for no.")
+
     # Pergunta se é teste ou real
     while True:
         test_input = input(Fore.CYAN + "\n⚡ Import mode: type 't' for test (10 docs) or 'r' for real: ").lower()
@@ -93,7 +104,8 @@ def main():
         backup_file,
         fields_to_export,
         file_format=file_format,
-        test_mode=test_mode
+        test_mode=test_mode,
+        include_id=include_id
     )
 
 if __name__ == "__main__":
