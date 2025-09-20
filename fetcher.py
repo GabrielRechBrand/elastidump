@@ -1,15 +1,17 @@
-# fetcher.py
 from colorama import Fore
 
-def fetch_documents(es, index_name, scroll_time, batch_size, test_mode=False, max_test_docs=10):
+
+def fetch_documents(es, index_name, scroll_time, batch_size, test_mode=False, max_test_docs=10, fields_to_export=None):
     """
-    Generator para buscar documentos do Elasticsearch usando scroll.
+    Generator para buscar documentos do Elasticsearch usando scroll,
+    trazendo apenas os campos necessários (_source_includes).
     """
     res = es.search(
         index=index_name,
         scroll=scroll_time,
         query={"match_all": {}},
-        size=batch_size
+        size=batch_size,
+        _source_includes=fields_to_export  # só traz os campos necessários
     )
 
     scroll_id = res['_scroll_id']
@@ -23,10 +25,12 @@ def fetch_documents(es, index_name, scroll_time, batch_size, test_mode=False, ma
     try:
         while res['hits']['hits']:
             for doc in res['hits']['hits']:
-                yield doc.get('_source', {}), doc.get('_id')
+                yield doc.get('_source', {}), doc.get('_id'), processed, total_docs
                 processed += 1
 
-                print(Fore.GREEN + f"\r📄 Exported {processed}/{total_docs} documents...", end='')
+                # imprime a cada 1000 docs (em vez de cada doc)
+                if processed % 1000 == 0 or processed == total_docs:
+                    print(Fore.GREEN + f"\r📄 Exported {processed}/{total_docs} documents...", end='')
 
                 if test_mode and processed >= max_test_docs:
                     return
