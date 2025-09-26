@@ -1,8 +1,7 @@
 import json
 import csv
 from pathlib import Path
-from fetcher import fetch_documents
-
+from export.fetcher import fetch_documents
 
 def ensure_extension(file_path, file_format):
     ext_map = {"jsonl": ".jsonl", "json": ".json", "csv": ".csv"}

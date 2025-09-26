@@ -1,7 +1,7 @@
 # main.py
-from connection import get_es_client
-from exporter import export_to_file
-from colorama import Fore, Style, init
+from config.connection import get_es_client
+from export.exporter import export_to_file
+from colorama import Fore, init
 
 init(autoreset=True)  # Para reset automático das cores
 

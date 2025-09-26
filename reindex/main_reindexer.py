@@ -1,6 +1,6 @@
-from connection import get_es_client
-from reindexer import reindex_index
-from colorama import Fore, Style, init
+from config.connection import get_es_client
+from reindex.reindexer import reindex_index
+from colorama import Fore, init
 
 init(autoreset=True)
 
